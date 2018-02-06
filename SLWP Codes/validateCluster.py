@@ -38,48 +38,48 @@ def performWindowing(listVals):
 			finalVal=float(sum(group1))/float(len(group1))
 	#print "Final return value: "+str(finalVal)
 	return finalVal
-		
-window_size=15
-filenames=glob.glob("wifiSLWP/Predicted_*")#GainData
-for files in filenames:
-	try:
-		out_file="Splitted"
-		for i in range(1,len(files.split("_"))):
-			out_file+="_"
-			out_file+=files.split("_")[i]
-		print out_file
-		in_file_handle=open(files,"r")
-		out_file_handle=open("wifiSLWP/"+out_file,"w+")
-		tempTime=0
-		listVals=[]
-		for lines in in_file_handle:
-			data=lines.strip("\r\n").split(",")
-			time=int(data[0])
-			inverted_gain=float(data[1])#JC 2, gain 3, both 1
-			if((time-tempTime)<window_size):
-				listVals.append(inverted_gain)			
-			else:
-				if(len(listVals)!=0):
-					finalVal=performWindowing(listVals)
-					#finalVal_1=oldPerformWindowing(listVals)
-					#print str(finalVal)+" "+str(finalVal_1)
-					out_file_handle.write(str(tempTime)+","+str(finalVal)+"\n")
-					tempTime=time
-					listVals=[]
-					countVal=0
-				else:
-					tempTime=time
-		in_file_handle.close()
-		if(len(listVals)!=0):
-			finalVal=performWindowing(listVals)
-			#finalVal_1=oldPerformWindowing(listVals)
-			#print str(finalVal)+" "+str(finalVal_1)
-			out_file_handle.write(str(tempTime)+","+str(finalVal)+"\n")
-			tempTime=time
+def runToValidate():		
+	window_size=15
+	filenames=glob.glob("wifiSLWP/Predicted_*")#GainData
+	for files in filenames:
+		try:
+			out_file="Splitted"
+			for i in range(1,len(files.split("_"))):
+				out_file+="_"
+				out_file+=files.split("_")[i]
+			print out_file
+			in_file_handle=open(files,"r")
+			out_file_handle=open("wifiSLWP/"+out_file,"w+")
+			tempTime=0
 			listVals=[]
-			countVal=0
-		out_file_handle.flush()
-		out_file_handle.close()
-	except Exception as e:
-		print e
-		pass
+			for lines in in_file_handle:
+				data=lines.strip("\r\n").split(",")
+				time=int(data[0])
+				inverted_gain=float(data[1])#JC 2, gain 3, both 1
+				if((time-tempTime)<window_size):
+					listVals.append(inverted_gain)			
+				else:
+					if(len(listVals)!=0):
+						finalVal=performWindowing(listVals)
+						#finalVal_1=oldPerformWindowing(listVals)
+						#print str(finalVal)+" "+str(finalVal_1)
+						out_file_handle.write(str(tempTime)+","+str(finalVal)+"\n")
+						tempTime=time
+						listVals=[]
+						countVal=0
+					else:
+						tempTime=time
+			in_file_handle.close()
+			if(len(listVals)!=0):
+				finalVal=performWindowing(listVals)
+				#finalVal_1=oldPerformWindowing(listVals)
+				#print str(finalVal)+" "+str(finalVal_1)
+				out_file_handle.write(str(tempTime)+","+str(finalVal)+"\n")
+				tempTime=time
+				listVals=[]
+				countVal=0
+			out_file_handle.flush()
+			out_file_handle.close()
+		except Exception as e:
+			print e
+			pass
