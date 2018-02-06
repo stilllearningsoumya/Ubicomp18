@@ -1,4 +1,4 @@
-def formWalktrapInout():
+def formWalktrapInput():
 	print "Hello"
 	date_file=open("dates.txt","r")
 	for dates in date_file:
